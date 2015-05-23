@@ -12,7 +12,6 @@ public class humanController extends MonoBehaviour {
 		_tile.setUpTiled(3, 3);
 		_tile.setZLayer(-1);
 
-		var astar = new _tile_engine.TileData.getInstance.AStar(this, this);
-
+		var astar = _tile_engine.getAStar();
 	}
 }

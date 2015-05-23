@@ -5,6 +5,10 @@ function Start() {
 	TileData.getInstance();
 }
 
+function getAStar() : AStar {
+	return new AStar(null, null);
+}
+
 public class TileData {
 	public var world : TiledWorld;
 	public var tile_prefab : GameObject;
@@ -17,7 +21,7 @@ public class TileData {
 	public static function getInstance() : TileData {
 		if (tile_data == null) {
 			tile_data = new TileData();
-			tile_data.world = new TiledWorld(20, 20);
+			tile_data.world = new TiledWorld(10, 10);
 		}
 		return tile_data;
 	}
@@ -45,6 +49,8 @@ public class AStar {
 
 	function draw_final_path() {
 		for (var _tile : GameObject in final_path) {
+			if (_tile == null)
+				continue;
 			_tile.GetComponent(tile).setType(tile.Type.PATH);
 			_tile.GetComponent(tile).setZLayer(-1);
 		}
