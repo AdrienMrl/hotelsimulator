@@ -12,6 +12,7 @@ public class TileType {
     PATH
   }
   public var type : Type = Type.FLOOR;
+  public var scale : float = 1;
 }
 
 public class CarrelageSprite extends TileType {
@@ -22,6 +23,7 @@ public class CarrelageSprite extends TileType {
 public class HumanSprite extends TileType {
   public function HumanSprite() {
     sprite = Resources.Load.<Sprite>("sprites/male_sprite");
+    scale = 1;
   }
 }
 
@@ -36,6 +38,8 @@ public class tile extends hotelEntity {
 
   function setType(type : TileType) {
     tile_type = type;
+    transform.localScale.x = type.scale;
+    transform.localScale.y = type.scale;
     paint();
   }
 

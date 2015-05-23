@@ -65,8 +65,8 @@ public class TiledWorld {
 	
 	function makeTile(x : int, y : int, type : TileType) {
 			tiles[x, y] = GameObject.Instantiate(TileData.getInstance().tile_prefab);
-			tiles[x, y].GetComponent(tile).setUp(x, y);
 			tiles[x, y].GetComponent(tile).setType(type);
+			tiles[x, y].GetComponent(tile).setUpTiled(x, y);
 	}
 
 	function TiledWorld(sizex : int, sizey : int) {

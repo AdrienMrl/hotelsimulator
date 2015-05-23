@@ -13,16 +13,33 @@ public class hotelEntity extends MonoBehaviour implements paintable {
 		tilePosX = px;
 		tilePosY = py;
 
-		transform.position.x = transform.localScale.x * tilePosX;
-		transform.position.y = transform.localScale.y * tilePosY;
-
+    recompute_pos();
 		paint();
 	}
 
+  protected function rescale(factor : float) {
+    transform.localScale.x = factor;
+    transform.localScale.y = factor;
+  }
+
+  protected function getTileSize() {
+    var sprite : Sprite = Resources.Load.<Sprite>("sprites/carrelage_sprite");
+
+    return sprite.bounds.size.x;
+  }
+
+  protected function recompute_pos() {
+
+    var TILE_SIZE : float = getTileSize();
+		transform.position.x = TILE_SIZE * tilePosX;
+		transform.position.y = TILE_SIZE * tilePosY;
+
+  }
+
 	function setUp(px : float, py : float) {
+
 		transform.position.x = px;
 		transform.position.y = py;
-
 		paint();
 	}
 
