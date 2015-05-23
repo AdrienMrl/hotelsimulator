@@ -8,7 +8,7 @@ public class humanController extends MonoBehaviour {
 
 	function Start() {
 		_tile = GetComponent(tile);
-		_tile.setType(tile.Type.START);
+		_tile.setType(new HumanSprite());
 		_tile.setUpTiled(3, 3);
 		_tile.setZLayer(-1);
 

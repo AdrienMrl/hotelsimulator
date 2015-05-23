@@ -13,8 +13,8 @@ public class hotelEntity extends MonoBehaviour implements paintable {
 		tilePosX = px;
 		tilePosY = py;
 
-		transform.position.x = transform.localScale.x  / 100 * tilePosX;
-		transform.position.y = transform.localScale.y  / 100 * tilePosY;
+		transform.position.x = transform.localScale.x * tilePosX;
+		transform.position.y = transform.localScale.y * tilePosY;
 
 		paint();
 	}

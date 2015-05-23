@@ -1,60 +1,52 @@
 ﻿#pragma strict
 
+public class TileType {
+  public var sprite : Sprite;
+  enum Type {
+    FLOOR,
+    TARGET,
+    OBSTACLE,
+
+    // DEBUG TYPES
+    START,
+    PATH
+  }
+  public var type : Type = Type.FLOOR;
+}
+
+public class CarrelageSprite extends TileType {
+  public function CarrelageSprite() {
+    sprite = Resources.Load.<Sprite>("sprites/carrelage_sprite");
+  }
+}
+public class HumanSprite extends TileType {
+  public function HumanSprite() {
+    sprite = Resources.Load.<Sprite>("sprites/male_sprite");
+  }
+}
+
 public class tile extends hotelEntity {
 
-	private var _gameEngine : gameEngine;
+  private var _gameEngine : gameEngine;
+  var tile_type : TileType;
 
-	enum Type {
-		EMPTY,
-		TARGET,
-		OBSTACLE,
+  function Awake() {
+    _gameEngine = GameObject.Find("GameEngine").GetComponent(gameEngine);
+  }
 
-		// DEBUG TYPES
-		START,
-		PATH
-	}
+  function setType(type : TileType) {
+    tile_type = type;
+    paint();
+  }
 
-	private var type : Type = Type.EMPTY;
+  function setZLayer(_z_layer : int) {
+    transform.position.z = _z_layer;
+  }
 
-	function Awake() {
-		_gameEngine = GameObject.Find("GameEngine").GetComponent(gameEngine);
-	}
-
-	function setType(t : Type) {
-		type = t;
-		paint();
-	}
-
-	function setZLayer(_z_layer : int) {
-		transform.position.z = _z_layer;
-	}
-
-	function paint() {
-
-		var color : Color;
-
-		switch (type) {
-			case Type.EMPTY:
-				color = Color.blue;
-				break;
-			case Type.OBSTACLE:
-				color = Color.black;
-				break;
-			case Type.TARGET:
-				color = Color.red;
-				break;
-			case Type.START:
-				color = Color.green;
-				break;
-			case Type.PATH:
-				color = Color.yellow;
-				break;
-			default:
-				color = Color.red;
-				break;
-		}
-
-		GetComponent(SpriteRenderer).color = color;
-	}
+  function paint() {
+    if (tile_type == null)
+      return;
+    GetComponent(SpriteRenderer).sprite = tile_type.sprite;
+  }
 
 }

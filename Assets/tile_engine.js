@@ -51,7 +51,7 @@ public class AStar {
 		for (var _tile : GameObject in final_path) {
 			if (_tile == null)
 				continue;
-			_tile.GetComponent(tile).setType(tile.Type.PATH);
+			_tile.GetComponent(tile).setType(new CarrelageSprite());
 			_tile.GetComponent(tile).setZLayer(-1);
 		}
 	}
@@ -63,7 +63,7 @@ public class TiledWorld {
 	private var sy : int;
 	private var tiles : GameObject[,];
 	
-	function makeTile(x : int, y : int, type : tile.Type) {
+	function makeTile(x : int, y : int, type : TileType) {
 			tiles[x, y] = GameObject.Instantiate(TileData.getInstance().tile_prefab);
 			tiles[x, y].GetComponent(tile).setUp(x, y);
 			tiles[x, y].GetComponent(tile).setType(type);
@@ -77,7 +77,7 @@ public class TiledWorld {
 		
 		for (var i = 0; i < sizex; i++) {
 			for (var j = 0; j < sizey; j++) {
-				makeTile(i, j, tile.Type.EMPTY);
+				makeTile(i, j, new CarrelageSprite());
 			}
 				
 		}
