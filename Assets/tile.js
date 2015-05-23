@@ -46,6 +46,9 @@ public class tile extends hotelEntity {
 			case Type.START:
 				color = Color.green;
 				break;
+			case Type.PATH:
+				color = Color.yellow;
+				break;
 			default:
 				color = Color.red;
 				break;

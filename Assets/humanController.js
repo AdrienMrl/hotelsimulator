@@ -1,5 +1,7 @@
 ﻿#pragma strict
 
+public var _tile_engine : tile_engine;
+
 public class humanController extends MonoBehaviour {
 
 	private var _tile : tile;
@@ -9,5 +11,8 @@ public class humanController extends MonoBehaviour {
 		_tile.setType(tile.Type.START);
 		_tile.setUpTiled(3, 3);
 		_tile.setZLayer(-1);
+
+		var astar = new _tile_engine.TileData.getInstance.AStar(this, this);
+
 	}
 }
