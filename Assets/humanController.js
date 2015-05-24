@@ -4,14 +4,14 @@ public var _tile_engine : tile_engine;
 
 public class humanController extends MonoBehaviour {
 
-	private var _tile : tile;
+	private var _tile : Tile;
 
 	function Start() {
-		_tile = GetComponent(tile);
+		_tile = GetComponent(Tile);
 		_tile.setType(new HumanSprite());
 		_tile.setUpTiled(3, 3);
 		_tile.setZLayer(-1);
 
-		var astar = _tile_engine.getAStar();
+		var astar = new AStar(_tile, TileData.getInstance().world.getTileClass(15, 10) as Tile);
 	}
 }

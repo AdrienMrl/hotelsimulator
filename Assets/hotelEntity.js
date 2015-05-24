@@ -5,9 +5,9 @@ public interface paintable {
 }
 
 public class hotelEntity extends MonoBehaviour implements paintable {
-	
-	protected var tilePosX : int;
-	protected var tilePosY : int;
+
+	public var tilePosX : int;
+	public var tilePosY : int;
 
 	function setUpTiled(px : int, py : int) {
 		tilePosX = px;
@@ -23,7 +23,7 @@ public class hotelEntity extends MonoBehaviour implements paintable {
   }
 
   protected function getTileSize() {
-    var sprite : Sprite = Resources.Load.<Sprite>("sprites/carrelage_sprite");
+    var sprite : Sprite = Resources.Load.<Sprite>("sprites/carrelage");
 
     return sprite.bounds.size.x;
   }
