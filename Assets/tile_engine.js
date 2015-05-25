@@ -54,7 +54,7 @@ public class AStar {
 
 		function CompareTo(a) : int {
 			var na : Node = a as Node;
-			return - (fcost - na.fcost);
+			return fcost - na.fcost;
 		}
 	}
 
@@ -77,8 +77,8 @@ public class AStar {
 	}
 
 	function distFromTarget(e : Node) {
-		return Mathf.Abs(e.px() - target.tilePosX) +
- 			     Mathf.Abs(e.py() - target.tilePosY);
+		return (Mathf.Abs(e.px() - target.tilePosX) +
+ 			     Mathf.Abs(e.py() - target.tilePosY)) * 10;
 	}
 
 	function getNode(x : int, y : int) {
@@ -101,7 +101,10 @@ public class AStar {
 			[-1,  1], [0,  1], [1,  1]
 		];
 
-		openedSet.Add(grid[start.tilePosX, start.tilePosY]);
+		var startNode = grid[start.tilePosX, start.tilePosY];
+		openedSet.Add(startNode);
+		startNode.opened = true;
+		
 
 		while (openedSet.Count != 0) {
 
@@ -113,7 +116,7 @@ public class AStar {
 			for (var dir : int[] in neighbours) {
 				var neighbour : Node = getNode(node.tile.tilePosX + dir[0], node.tile.tilePosY + dir[1]);
 
-				if (neighbour == null || neighbour.closed)
+				if (neighbour == null || neighbour.closed || neighbour.tile.isObstacle())
 					continue;
 
 				if (neighbour.tile.tilePosX == target.tilePosX &&
@@ -124,18 +127,18 @@ public class AStar {
 						return;
 				}
 
-				if (!neighbour.opened) {
-					openedSet.Add(neighbour);
-					neighbour.opened = true;
-				}
+			
 
-				var neighbour_g_cost = node.gcost + Mathf.Sqrt((Mathf.Abs(dir[0]) + Mathf.Abs(dir[0])) * 10);
-				if (neighbour.pointing == null || neighbour.gcost > neighbour_g_cost) {
+				var neighbour_g_cost = node.gcost + Mathf.Sqrt((Mathf.Abs(dir[0]) + Mathf.Abs(dir[1]))) * 10;
+				if (!neighbour.opened || neighbour.gcost > neighbour_g_cost) {
 					neighbour.gcost = neighbour_g_cost;
 					neighbour.pointing = node;
+					neighbour.fcost = neighbour.gcost + distFromTarget(neighbour);
+					if (!neighbour.opened) {
+						openedSet.Add(neighbour);
+						neighbour.opened = true;
+					}
 				}
-				neighbour.fcost = neighbour.gcost + distFromTarget(neighbour);
-				openedSet.Add(neighbour);
 			}
 		}
 	}
@@ -143,7 +146,7 @@ public class AStar {
 	function make_final_path(end : Node) {
 
 		var current = end;
-		while (current.px() != start.tilePosX &&
+		while (current.px() != start.tilePosX ||
 					 current.py() != start.tilePosY) {
 			final_path.Add(world.getTileClass(current.px(), current.py()));
 			current = current.pointing;
@@ -154,8 +157,9 @@ public class AStar {
 		for (var _tile : Tile in final_path) {
 			if (_tile == null)
 				continue;
-			_tile.sprites.Clear();
-			_tile.setZLayer(-1);
+			for (var sprite:TileType in _tile.sprites) {
+				sprite.gameObject.active = false;
+			}
 		}
 	}
 }

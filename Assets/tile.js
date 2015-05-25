@@ -14,6 +14,7 @@ public class TileType {
   public var type : Type = Type.FLOOR;
   public var scale : float = 1;
   public var zdepth : float = 0;
+  public var gameObject : GameObject;
 }
 
 public class CarrelageSprite extends TileType {
@@ -39,7 +40,7 @@ public class PlantSprite extends TileType {
 public class Tile extends hotelEntity {
 
   private var _gameEngine : gameEngine;
-  var sprites = new List.<GameObject>();
+  var sprites = new List.<TileType>();
   
   function Awake() {
     _gameEngine = GameObject.Find("GameEngine").GetComponent(gameEngine);
@@ -49,8 +50,8 @@ public class Tile extends hotelEntity {
 
 	if (type == null)
 		return;
-	var new_sprite : GameObject = instantiateSprite(type);
-    sprites.Add(new_sprite);
+	type.gameObject = instantiateSprite(type);
+    sprites.Add(type);
     transform.localScale.x = type.scale;
     transform.localScale.y = type.scale;
 
@@ -59,9 +60,16 @@ public class Tile extends hotelEntity {
       if (sprite != null) {
         var diff = sprite.bounds.size.y - getTileSize();
         if (diff > 0)
-          new_sprite.transform.localPosition.y += diff / 2;
+          type.gameObject.transform.localPosition.y += diff / 2;
       }
-    paint();
+  }
+  
+  function isObstacle() {
+ 
+  	for (var sprite:TileType in sprites)
+  		if (sprite.type == TileType.Type.OBSTACLE)
+  			return true;
+  	return false;
   }
 
   function setZLayer(_z_layer : int) {
