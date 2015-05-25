@@ -12,6 +12,7 @@ public class hotelEntity extends MonoBehaviour implements paintable {
 	function setUpTiled(px : int, py : int) {
 		tilePosX = px;
 		tilePosY = py;
+		transform.position.z = 0.2 * tilePosY;
 
     recompute_pos();
 		paint();

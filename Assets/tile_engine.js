@@ -154,7 +154,7 @@ public class AStar {
 		for (var _tile : Tile in final_path) {
 			if (_tile == null)
 				continue;
-			_tile.setType(null);
+			_tile.sprites.Clear();
 			_tile.setZLayer(-1);
 		}
 	}
@@ -166,10 +166,11 @@ public class TiledWorld {
 	public var sy : int;
 	private var tiles : GameObject[,];
 
-	function makeTile(x : int, y : int, type : TileType) {
+	function makeTile(x : int, y : int, sprite : TileType) {
 			tiles[x, y] = GameObject.Instantiate(TileData.getInstance().tile_prefab);
-			tiles[x, y].GetComponent(Tile).setType(type);
+			tiles[x, y].GetComponent(Tile).addSprite(sprite);
 			tiles[x, y].GetComponent(Tile).setUpTiled(x, y);
+			return tiles[x, y];
 	}
 
 	function TiledWorld(sizex : int, sizey : int) {
@@ -180,7 +181,9 @@ public class TiledWorld {
 
 		for (var i = 0; i < sizex; i++) {
 			for (var j = 0; j < sizey; j++) {
-				makeTile(i, j, Random.Range(0, 5) == 0 ? new PlantSprite() : new CarrelageSprite());
+				var t = makeTile(i, j, new CarrelageSprite());
+				if (Random.Range(0, 3) == 0)
+					t.GetComponent(Tile).addSprite(new PlantSprite());
 			}
 
 		}

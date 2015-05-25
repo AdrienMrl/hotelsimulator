@@ -3,7 +3,7 @@
 public class TileType {
   public var sprite : Sprite;
   enum Type {
-    FLOOR,
+  	FLOOR,
     TARGET,
     OBSTACLE,
 
@@ -13,6 +13,7 @@ public class TileType {
   }
   public var type : Type = Type.FLOOR;
   public var scale : float = 1;
+  public var zdepth : float = 0;
 }
 
 public class CarrelageSprite extends TileType {
@@ -24,39 +25,42 @@ public class HumanSprite extends TileType {
   public function HumanSprite() {
     sprite = Resources.Load.<Sprite>("sprites/human_male");
     scale = 1;
+    zdepth = -0.1;
   }
 }
 public class PlantSprite extends TileType {
   public function PlantSprite() {
     sprite = Resources.Load.<Sprite>("sprites/plant1");
     type = type.OBSTACLE;
+    zdepth = -0.1;
   }
 }
 
 public class Tile extends hotelEntity {
 
   private var _gameEngine : gameEngine;
-  var tile_type : TileType;
-
+  var sprites = new List.<GameObject>();
+  
   function Awake() {
     _gameEngine = GameObject.Find("GameEngine").GetComponent(gameEngine);
   }
 
-  function setType(type : TileType) {
+  function addSprite(type : TileType) {
 
-    tile_type = type;
-    if (type != null) {
-      transform.localScale.x = type.scale;
-      transform.localScale.y = type.scale;
+	if (type == null)
+		return;
+	var new_sprite : GameObject = instantiateSprite(type);
+    sprites.Add(new_sprite);
+    transform.localScale.x = type.scale;
+    transform.localScale.y = type.scale;
 
       // if it is a big sprite, we have to place it correctly
       var sprite : Sprite = type.sprite;
       if (sprite != null) {
         var diff = sprite.bounds.size.y - getTileSize();
         if (diff > 0)
-          transform.position.y += diff;
+          new_sprite.transform.localPosition.y += diff / 2;
       }
-    }
     paint();
   }
 
@@ -64,14 +68,13 @@ public class Tile extends hotelEntity {
     transform.position.z = _z_layer;
   }
 
-  function paint() {
-
-    var sprite : Sprite = null;
-
-    if (tile_type != null)
-      sprite = tile_type.sprite;
-
-    GetComponent(SpriteRenderer).sprite = sprite;
-  }
-
+  function instantiateSprite(sprite : TileType) {
+		var new_sprite_go : GameObject =
+			Instantiate(Resources.Load.<GameObject>("sprite_prefab"));
+    	new_sprite_go.GetComponent(SpriteRenderer).sprite = sprite.sprite;
+    	new_sprite_go.transform.parent = transform;
+    	new_sprite_go.transform.localPosition = Vector3(0, 0, 0);
+    	new_sprite_go.transform.localPosition.z = sprite.zdepth;
+    	return new_sprite_go;
+    }
 }

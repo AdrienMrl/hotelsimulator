@@ -8,10 +8,10 @@ public class humanController extends MonoBehaviour {
 
 	function Start() {
 		_tile = GetComponent(Tile);
-		_tile.setType(new HumanSprite());
+		_tile.addSprite(new HumanSprite());
 		_tile.setUpTiled(3, 3);
 		_tile.setZLayer(-1);
 
-		var astar = new AStar(_tile, TileData.getInstance().world.getTileClass(15, 10) as Tile);
+		//var astar = new AStar(_tile, TileData.getInstance().world.getTileClass(15, 10) as Tile);
 	}
 }
