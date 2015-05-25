@@ -73,7 +73,7 @@ public class AStar {
 
 		worldSize = i * j;
 		compute();
-		draw_final_path();
+		//draw_final_path();
 	}
 
 	function distFromTarget(e : Node) {
@@ -151,8 +151,17 @@ public class AStar {
 			final_path.Add(world.getTileClass(current.px(), current.py()));
 			current = current.pointing;
 		}
+		final_path.Reverse();
 	}
 
+	function getNextPath() {
+		return final_path.Count == 0 ? null : final_path[0];
+	}
+	
+	function popPath() {
+		final_path.RemoveAt(0);
+	}
+	
 	function draw_final_path() {
 		for (var _tile : Tile in final_path) {
 			if (_tile == null)
@@ -169,18 +178,44 @@ public class TiledWorld {
 	public var sx : int;
 	public var sy : int;
 	private var tiles : GameObject[,];
+	
 
+	function makeWildTile(x : int, y : int, sprite : TileType) {
+		var tile : GameObject  = GameObject.Instantiate(TileData.getInstance().tile_prefab);
+		tile.GetComponent(Tile).addSprite(sprite);
+		tile.GetComponent(Tile).setUpTiled(x, y);
+		return tile;
+	}
+	
 	function makeTile(x : int, y : int, sprite : TileType) {
-			tiles[x, y] = GameObject.Instantiate(TileData.getInstance().tile_prefab);
-			tiles[x, y].GetComponent(Tile).addSprite(sprite);
-			tiles[x, y].GetComponent(Tile).setUpTiled(x, y);
-			return tiles[x, y];
+		tiles[x, y] = makeWildTile(x, y, sprite);
+		return tiles[x, y];
+	}
+
+	var world_size = 30;
+	
+	function getWorldBounds() {
+		var spriteSize : float = hotelEntity.getTileSize();
+		var wx = (world_size + sx) * spriteSize - spriteSize / 2;
+		var wy = (world_size + sy) * spriteSize - spriteSize / 2;
+		var bounds : Vector2[] = [
+			Vector2(-world_size * spriteSize + spriteSize / 2, wy),
+			Vector2(wx, wy),
+			Vector2(-world_size * spriteSize + spriteSize / 2, -world_size * spriteSize + spriteSize / 2),
+			Vector2(wx, -world_size * spriteSize + spriteSize / 2)
+		];
+		return bounds;
 	}
 
 	function TiledWorld(sizex : int, sizey : int) {
+	
 		this.sx = sizex;
 		this.sy = sizey;
 
+		for (var e = -world_size; e < world_size + sizex; e++)
+			for (var f = -world_size; f < world_size + sizey; f++)
+		  		makeWildTile(e, f, new GrassSprite());
+		  		
 		tiles = new GameObject[sizex, sizey];
 
 		for (var i = 0; i < sizex; i++) {
@@ -201,4 +236,14 @@ public class TiledWorld {
 	function getTileClass(x : int, y : int) : Tile {
 		return tiles[x, y].GetComponent(Tile);
 	}
+	
+	
+}
+
+static function isTileCollision(a : Tile, b : Tile) {
+	var diff = a.transform.position - b.transform.position;
+	if (Mathf.Abs(diff.x) < 0.03 &&
+		Mathf.Abs(diff.y) < 0.03)
+		return true;
+	return false;
 }

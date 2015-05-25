@@ -1,21 +1,19 @@
 ﻿#pragma strict
 
-public interface paintable {
-	function paint();
-}
-
-public class hotelEntity extends MonoBehaviour implements paintable {
+public class hotelEntity extends MonoBehaviour {
 
 	public var tilePosX : int;
 	public var tilePosY : int;
 
-	function setUpTiled(px : int, py : int) {
+	function setTiledPos(px : int, py : int) {
 		tilePosX = px;
 		tilePosY = py;
 		transform.position.z = 0.2 * tilePosY;
-
-    recompute_pos();
-		paint();
+	}
+	
+	function setUpTiled(px : int, py : int) {
+		setTiledPos(px, py);
+    	recompute_pos();
 	}
 
   protected function rescale(factor : float) {
@@ -23,7 +21,7 @@ public class hotelEntity extends MonoBehaviour implements paintable {
     transform.localScale.y = factor;
   }
 
-  protected function getTileSize() {
+  static function getTileSize() {
     var sprite : Sprite = Resources.Load.<Sprite>("sprites/carrelage");
 
     return sprite.bounds.size.x;
@@ -41,9 +39,5 @@ public class hotelEntity extends MonoBehaviour implements paintable {
 
 		transform.position.x = px;
 		transform.position.y = py;
-		paint();
-	}
-
-	function paint() {
 	}
 }
