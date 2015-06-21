@@ -1,15 +1,15 @@
 ﻿#pragma strict
 
-public var _tile_engine : tile_engine;
-
+// considere using inheritance instead
 public class humanController extends MonoBehaviour {
 
-	private var _tile : Tile;
+	private var _hotelEntity : hotelEntity;
 
 	function Start() {
-		_tile = GetComponent(Tile);
-		_tile.addSprite(new HumanSprite());
-		_tile.setUpTiled(3, 3);
-		_tile.moveTowards(TileData.getInstance().world.getTileClass(3, 3) as Tile);
+		_hotelEntity = GetComponent(hotelEntity);
+		_hotelEntity.setSprite(new HumanSprite());
+		_hotelEntity.setUpTiled(3, 3);
+		_hotelEntity.moveTowards(TileData.getInstance().world.getTileClass(3, 3) as Tile);
 	}
+
 }

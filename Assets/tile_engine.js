@@ -2,6 +2,8 @@
 
 import System.Collections.Generic;
 
+public var reception_prefab;
+
 function Start() {
 
 	TileData.getInstance();
@@ -25,11 +27,17 @@ public class TileData {
 	}
 }
 
+static function getTile(x: int, y: int) : Tile {
+	var instance = TileData.getInstance();
+	var world = instance.world;
+	return world.getTileClass(x, y);
+}
+
 public class AStar {
 
 	private var final_path : List.<Tile> = new List.<Tile>();
-	private var start : hotelEntity;
-	private var target : hotelEntity;
+	private var start : Tile; // TODO: merge with the line below
+	private var target : Tile;
 	private var worldSize : int;
 	private var world : TiledWorld;
 
@@ -46,10 +54,10 @@ public class AStar {
 		}
 
 		function px() {
-			return tile.tilePosX;
+			return tile.posX;
 		}
 		function py() {
-			return tile.tilePosY;
+			return tile.posY;
 		}
 
 		function CompareTo(a) : int {
@@ -77,8 +85,8 @@ public class AStar {
 	}
 
 	function distFromTarget(e : Node) {
-		return (Mathf.Abs(e.px() - target.tilePosX) +
- 			     Mathf.Abs(e.py() - target.tilePosY)) * 10;
+		return (Mathf.Abs(e.px() - target.posX) +
+ 			     Mathf.Abs(e.py() - target.posY)) * 10;
 	}
 
 	function getNode(x : int, y : int) {
@@ -101,7 +109,7 @@ public class AStar {
 			[-1,  1], [0,  1], [1,  1]
 		];
 
-		var startNode = grid[start.tilePosX, start.tilePosY];
+		var startNode = grid[start.posX, start.posY];
 		openedSet.Add(startNode);
 		startNode.opened = true;
 		
@@ -114,13 +122,13 @@ public class AStar {
 			node.closed = true;
 
 			for (var dir : int[] in neighbours) {
-				var neighbour : Node = getNode(node.tile.tilePosX + dir[0], node.tile.tilePosY + dir[1]);
+				var neighbour : Node = getNode(node.tile.posX + dir[0], node.tile.posY + dir[1]);
 
 				if (neighbour == null || neighbour.closed || neighbour.tile.isObstacle())
 					continue;
 
-				if (neighbour.tile.tilePosX == target.tilePosX &&
-					  neighbour.tile.tilePosY == target.tilePosY) {
+				if (neighbour.tile.posX == target.posX &&
+					  neighbour.tile.posY == target.posY) {
 
 						neighbour.pointing = node;
 						make_final_path(neighbour);
@@ -146,8 +154,8 @@ public class AStar {
 	function make_final_path(end : Node) {
 
 		var current = end;
-		while (current.px() != start.tilePosX ||
-					 current.py() != start.tilePosY) {
+		while (current.px() != start.posX ||
+					 current.py() != start.posY) {
 			final_path.Add(world.getTileClass(current.px(), current.py()));
 			current = current.pointing;
 		}
@@ -166,8 +174,7 @@ public class AStar {
 		for (var _tile : Tile in final_path) {
 			if (_tile == null)
 				continue;
-			for (var sprite:TileType in _tile.sprites) {
-				sprite.gameObject.active = false;
+			for (var sprite:HotelSprite in _tile.sprites) {
 			}
 		}
 	}
@@ -180,14 +187,14 @@ public class TiledWorld {
 	private var tiles : GameObject[,];
 	
 
-	function makeWildTile(x : int, y : int, sprite : TileType) {
+	function makeWildTile(x : int, y : int, sprite : HotelSprite) {
 		var tile : GameObject  = GameObject.Instantiate(TileData.getInstance().tile_prefab);
+		tile.GetComponent(Tile).setUpTiled(x, y); // TODO: get rid of the tilePrefab, should be a simple object in an array
 		tile.GetComponent(Tile).addSprite(sprite);
-		tile.GetComponent(Tile).setUpTiled(x, y);
 		return tile;
 	}
 	
-	function makeTile(x : int, y : int, sprite : TileType) {
+	function makeTile(x : int, y : int, sprite : HotelSprite) {
 		tiles[x, y] = makeWildTile(x, y, sprite);
 		return tiles[x, y];
 	}
@@ -215,7 +222,8 @@ public class TiledWorld {
 		for (var e = -world_size; e < world_size + sizex; e++)
 			for (var f = -world_size; f < world_size + sizey; f++)
 		  		makeWildTile(e, f, new GrassSprite());
-		  		
+		
+		
 		tiles = new GameObject[sizex, sizey];
 
 		for (var i = 0; i < sizex; i++) {
@@ -227,6 +235,7 @@ public class TiledWorld {
 
 		}
 	}
+	
 
 	function getTile(x : int, y : int) : GameObject {
 
@@ -247,3 +256,10 @@ static function isTileCollision(a : Tile, b : Tile) {
 		return true;
 	return false;
 }
+
+static function worldPosFromTilePos(tilePos : Vector2, sprite : Sprite) {
+	return Vector3(hotelEntity.getTileSize() * tilePos.x + sprite.bounds.size.x / 2,
+    			   hotelEntity.getTileSize() * tilePos.y + sprite.bounds.size.y / 2,
+    			   tilePos.y / 10f);
+}
+
