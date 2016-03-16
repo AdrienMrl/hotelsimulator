@@ -6,8 +6,9 @@ class Guy extends Movable {
 
     repos(Vector2(0, 0));
 
-    var queue = Queue([Grid.instance.getNodeAt(Vector2(10, 5))]);
-    queue.Enqueue(Grid.instance.getNodeAt(Vector2(5, 9)));
+    var astar = AStar(current_node, Grid.instance.getNodeAt(Vector2(10, 7)));
+    var path = astar.final_path;
+    var queue = Queue(path);
     setQueue(queue);
   }
 
