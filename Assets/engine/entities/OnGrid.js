@@ -7,7 +7,13 @@ class OnGrid extends MonoBehaviour {
   var obj_name: String;
 
   function Start() {
-    meta = Meta.getMetaFor(obj_name);
+  }
+
+  function setup(name: String) {
+
+    obj_name = name;
+
+    meta = Meta.meta[name];
   }
 
   function Update() {
@@ -15,16 +21,28 @@ class OnGrid extends MonoBehaviour {
 
   function geometryToGrid(x: int, y: int) {
 
-    print("setting geometry to " + meta.geometry[0, 0]);
-//    var geometry = Spawner.prefab_meta['desk']
+    if (meta.geometry == null) {
+      if (meta.isObstacle)
+        Grid.instance.setNodeTypeAt(current_node.positionOnGrid, Node.Type.Obstacle);
+      return;
+    }
+
+    var geo = meta.geometry;
+    var node_pos = current_node.positionOnGrid;
+
+    for (var i = 0; i < geo.GetLength(1); i++) {
+      for (var j = 0; j < geo.GetLength(0); j++) {
+        if (geo[j, i] == 1)
+          Grid.instance.getNodeAt(Vector2(j + node_pos.x, i + node_pos.y)).type = Node.Type.Obstacle;
+      }
+    }
 
   }
 
   function wasReposed(x: int, y: int) {
     current_node = Grid.instance.getNodeAt(Vector2(x, y));
 
-    if (meta != null)
-      geometryToGrid(x, y);
+    geometryToGrid(x, y);
   }
 
   function repos(x: int, y: int) {

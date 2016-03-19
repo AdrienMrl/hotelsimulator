@@ -186,7 +186,6 @@ class Dijkstra extends MonoBehaviour {
       }
     }
 
-    showOutputGrid(output_grid);
     return output_grid;
   }
 

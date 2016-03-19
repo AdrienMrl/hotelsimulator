@@ -24,10 +24,8 @@ class Movable extends OnGrid {
 
       var step = speed * Time.deltaTime;
       faceDirection();
-      print("" + transform.position + "target is " + target_node.getWorldPos() + " step is " + step);
       transform.position =
         Vector3.MoveTowards(transform.position, target_node.getWorldPos(), step);
-      print("" + transform.position + "target is " + target_node.getWorldPos() + " step is " + step);
 
       if (Vector3.Distance(transform.position, target_node.getWorldPos()) <= step) {
         current_node = target_node;
@@ -44,14 +42,12 @@ class Movable extends OnGrid {
     }
 
     function toNextNode(): Node {
-
       return target.entrance.tellMeTheWay(this);
     }
 
     function stopedMoving() {
       GetComponent.<Animation>().Stop(movingAnimationName);
-      // broken
-      // GetComponent.<Animation>().Play(idleAnimationName);
+      GetComponent.<Animation>().Play(idleAnimationName);
     }
 
     function startedMoving() {

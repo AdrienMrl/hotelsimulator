@@ -43,9 +43,14 @@ public class Grid {
 
 
   /*
-  * --- READ THE GRID API ---
+  * --- READ/WRITE TO THE GRID API ---
   */
   function getNodeAt(position: Vector2) : Node {
     return grid[position.x, position.y];
   }
+
+  function setNodeTypeAt(position: Vector2, type: Node.Type) {
+    getNodeAt(position).type = type;
+  }
+
 }
