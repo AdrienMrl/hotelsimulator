@@ -2,63 +2,73 @@
 
 class Movable extends OnGrid {
 
-  var speed = 6;
+  var speed = 1;
   public var movingAnimationName = "walking";
   public var idleAnimationName = "idle";
-  private var path: Queue;
-  private var target: Node;
+  private var target: Interactive;
+  private var target_node: Node;
+
+  function Start() {
+    super.Start();
+  }
 
   function Update() {
 
     if (target != null) {
 
+      if (target_node == null) {
+        target = null;
+        stopedMoving();
+        return;
+      }
+
       var step = speed * Time.deltaTime;
-      transform.position =
-        Vector3.MoveTowards(transform.position, target.getWorldPos(), step);
       faceDirection();
-      if (Vector3.Distance(transform.position, target.getWorldPos()) <= step) {
-        current_node = target;
-        target = pullNextInQueue();
+      print("" + transform.position + "target is " + target_node.getWorldPos() + " step is " + step);
+      transform.position =
+        Vector3.MoveTowards(transform.position, target_node.getWorldPos(), step);
+      print("" + transform.position + "target is " + target_node.getWorldPos() + " step is " + step);
+
+      if (Vector3.Distance(transform.position, target_node.getWorldPos()) <= step) {
+        current_node = target_node;
+        target_node = toNextNode();
       }
     }
 
   }
 
   function faceDirection() {
-      var new_dir = Vector3.RotateTowards(transform.forward,
-        target.getWorldPos() - transform.position, speed * Time.deltaTime, 0);
+    var new_dir = Vector3.RotateTowards(transform.forward,
+      target_node.getWorldPos() - transform.position, speed * 5 * Time.deltaTime, 0);
       transform.rotation = Quaternion.LookRotation(new_dir);
-  }
-
-  function pullNextInQueue() {
-
-    if (path.Count == 0) {
-      GetComponent.<Animation>().Stop(movingAnimationName);
-      GetComponent.<Animation>().Play(idleAnimationName);
-      return null;
     }
 
-    var next: Node = path.Dequeue() as Node;
+    function toNextNode(): Node {
 
+      return target.entrance.tellMeTheWay(this);
+    }
 
-    return next;
-  }
+    function stopedMoving() {
+      GetComponent.<Animation>().Stop(movingAnimationName);
+      // broken
+      // GetComponent.<Animation>().Play(idleAnimationName);
+    }
 
-  function setQueue(queue: Queue) {
-
-    if (movingAnimationName != null) {
-      var animation = GetComponent.<Animation>();
-      animation.Play(movingAnimationName);
-      for (var state: AnimationState in animation) {
-        state.speed = 2;
+    function startedMoving() {
+      if (movingAnimationName != null) {
+        var animation = GetComponent.<Animation>();
+        animation.Play(movingAnimationName);
+        for (var state: AnimationState in animation) {
+          state.speed = 2;
+        }
       }
     }
 
-    path = queue;
-    target = pullNextInQueue();
+    /* --- API --- */
+
+    function moveTo(trgt: Interactive) {
+      target = trgt;
+      target_node = toNextNode();
+      startedMoving();
+    }
   }
-  function queue(node: Node) {
-    target = node;
-    path.Enqueue(node);
-  }
-}
