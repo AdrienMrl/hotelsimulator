@@ -2,7 +2,7 @@
 
 public class Grid {
 
-  public static var instance = Grid(Vector2(100, 100));
+  public static var instance = Grid(Vector2(50, 50));
 
   public  var size: Vector2;
   public var grid: Node[,];

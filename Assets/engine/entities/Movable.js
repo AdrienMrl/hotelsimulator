@@ -37,7 +37,7 @@ class Movable extends OnGrid {
 
   function faceDirection() {
     var new_dir = Vector3.RotateTowards(transform.forward,
-      target_node.getWorldPos() - transform.position, speed * 5 * Time.deltaTime, 0);
+      target_node.getWorldPos() - transform.position, speed * 3 * Time.deltaTime, 0);
       transform.rotation = Quaternion.LookRotation(new_dir);
     }
 
