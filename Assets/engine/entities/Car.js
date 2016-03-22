@@ -5,10 +5,10 @@ class Car extends Movable {
   function Start() {
 
     speed = 4;
-    repos(7, 0);
+    movingAnimationName = null;
 
-    var desk = Spawner.spawn("desk", Vector2(12, 17)) as Interactive;
-
-    moveTo(desk);
+    var parking = Spawner.findRoom(Parking) as Parking;
+    var parking_spot = parking.getParkingSpot();
+    moveTo(parking_spot);
   }
 }

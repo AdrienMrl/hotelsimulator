@@ -34,5 +34,6 @@ function playBackgroundMusic() {
 }
 
 function Start () {
-  playBackgroundMusic();
+  // playBackgroundMusic();
+  gameObject.AddComponent.<Spawner>();
 }

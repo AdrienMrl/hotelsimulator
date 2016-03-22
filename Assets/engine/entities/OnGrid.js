@@ -51,7 +51,7 @@ class OnGrid extends MonoBehaviour {
 
   function repos(pos: Vector2) {
     current_node = Grid.instance.getNodeAt(pos);
-    transform.position = current_node.getWorldPos();
+    transform.position = current_node.getWorldPos() + Vector3(0, 0.01, 0);
     wasReposed(pos.x, pos.y);
   }
 

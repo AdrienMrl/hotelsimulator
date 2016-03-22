@@ -46,8 +46,10 @@ class Movable extends OnGrid {
     }
 
     function stopedMoving() {
-      GetComponent.<Animation>().Stop(movingAnimationName);
-      GetComponent.<Animation>().Play(idleAnimationName);
+      if (movingAnimationName != null) {
+        GetComponent.<Animation>().Stop(movingAnimationName);
+        GetComponent.<Animation>().Play(idleAnimationName);
+      }
     }
 
     function startedMoving() {

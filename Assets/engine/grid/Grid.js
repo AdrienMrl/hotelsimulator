@@ -53,4 +53,12 @@ public class Grid {
     getNodeAt(position).type = type;
   }
 
+  /*
+  * --- HELPERS ---
+  */
+  static function worldPointToGrid(point: Vector3) {
+    return Vector2(point.x * Node.tile_size + Node.tile_size / 2.0,
+                   point.z * Node.tile_size + Node.tile_size / 2.0);
+  }
+
 }

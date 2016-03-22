@@ -3,6 +3,8 @@
 class Interactive extends OnGrid {
 
   public var entrance: Target;
+  public var entrance_relative_pos = Vector2(0, 0);
+  public var available = true;
 
   function repos(pos: Vector2) {
 
@@ -13,7 +15,8 @@ class Interactive extends OnGrid {
 
   function setEntranceNode() {
 
-    var entrance_node: Node = Grid.instance.getNodeAt(Vector2(current_node.positionOnGrid.x, current_node.positionOnGrid.y - 1));
+    var entrance_node: Node =
+      Grid.instance.getNodeAt(current_node.positionOnGrid + entrance_relative_pos);
     entrance = Target(entrance_node);
   }
 
