@@ -27,7 +27,7 @@ function spawnMouse() {
   if (Physics.Raycast (ray, hit, Mathf.Infinity)) {
 
     var i = 0;
-    for (key in Meta.meta.Keys) {
+    for (var key in Meta.meta.Keys as System.Collections.ICollection) {
       if (i++ == selected_prefab) {
         spawn(key, Grid.worldPointToGrid(hit.point));
         return;
@@ -51,6 +51,7 @@ static function spawn(what: String, where: Vector2): OnGrid {
 static function spawnInteractive(what: String, where: Vector2): Interactive {
   var obj = spawn(what, where) as Interactive;
   obj.entrance_relative_pos = (Meta.meta[what] as Meta).entrance;
+  return obj;
 }
 
 static function createRoom(name: String) {
