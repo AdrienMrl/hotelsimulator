@@ -13,7 +13,7 @@ class OnGrid extends MonoBehaviour {
 
     obj_name = name;
 
-    meta = Meta.meta[name];
+    meta = Meta.meta[name] as Meta;
   }
 
   function Update() {

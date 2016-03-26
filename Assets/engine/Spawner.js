@@ -29,11 +29,10 @@ function spawnMouse() {
     var i = 0;
     for (var key in Meta.meta.Keys as System.Collections.ICollection) {
       if (i++ == selected_prefab) {
-        spawn(key, Grid.worldPointToGrid(hit.point));
+        spawn(key as String, Grid.worldPointToGrid(hit.point));
         return;
       }
     }
-      //print(Meta.meta.Keys);//  spawn(Meta.meta[selected_prefab])
   }
 
 }

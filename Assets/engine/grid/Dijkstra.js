@@ -1,6 +1,7 @@
 ﻿#pragma strict
 
 class DijkstraGrid {
+
   var size = Vector2.zero;
   public var map: int[,];
 
@@ -43,6 +44,7 @@ class Dijkstra extends MonoBehaviour {
     Vector2(0, 1),
     Vector2(1, 1)
   ];
+
 
   static function getDistanceFromNeighbour(direction: Vector2) {
 
@@ -106,7 +108,7 @@ class Dijkstra extends MonoBehaviour {
     var min_distance = -1;
     var closest_node: Node = null;
 
-    for (d in directions) {
+    for (d in Dijkstra.directions) {
 
       var point = position + d;
       var dist = map.getValue(point);
@@ -168,7 +170,7 @@ class Dijkstra extends MonoBehaviour {
       }
 
 
-      for (d in directions) {
+      for (d in Dijkstra.directions) {
         var point = core_node.positionOnGrid + d;
 
         if (!output_grid.isValid(point))

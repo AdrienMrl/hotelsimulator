@@ -9,10 +9,12 @@ class DeskMeta extends Meta {
   }
 }
 
+static var zero = Vector2(0, 0);
+
 static var meta = {
-  'guy': Meta(false, null, null),
-  'tree': Meta(true, null, null),
-  'car': Meta(false, null, null),
+  'guy': Meta(false, null, zero),
+  'tree': Meta(true, null, zero),
+  'car': Meta(false, null, zero),
   'desk': DeskMeta(),
   'parking-spot': Meta(false, null, Vector2(0, 1))
 };
@@ -22,9 +24,9 @@ class Meta {
   var geometry: int[,];
   var entrance = Vector2(0, 0);
 
-  function Meta(isOb: System.Boolean, geo, entr) {
+  function Meta(isOb: System.Boolean, geo, entr: Vector2) {
     isObstacle = isOb;
-    geometry = geo;
+    geometry = geo as int[,];
     if (entr != null)
       entrance = entr;
   }
