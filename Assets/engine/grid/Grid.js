@@ -46,7 +46,7 @@ public class Grid {
   * --- READ/WRITE TO THE GRID API ---
   */
   function getNodeAt(position: Vector2) : Node {
-    return grid[position.x, position.y];
+    return isNodeValid(position) ? grid[position.x, position.y] : null;
   }
 
   function setNodeTypeAt(position: Vector2, type: Node.Type) {
@@ -57,8 +57,15 @@ public class Grid {
   * --- HELPERS ---
   */
   static function worldPointToGrid(point: Vector3) {
-    return Vector2(point.x * Node.tile_size + Node.tile_size / 2.0,
-                   point.z * Node.tile_size + Node.tile_size / 2.0);
+    return Vector2(point.x * Node.tileSize + Node.tileSize / 2.0,
+                   point.z * Node.tileSize + Node.tileSize / 2.0);
+  }
+
+  static function isNodeValid(position: Vector2) {
+      return position.x >= 0 &&
+             position.y >= 0 &&
+             position.x < Grid.instance.size.x &&
+             position.y < Grid.instance.size.y;
   }
 
 }

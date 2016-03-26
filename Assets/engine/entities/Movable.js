@@ -13,7 +13,7 @@ class Movable extends OnGrid {
   }
 
   function Update() {
-
+    super.Update();
     driver.UpdatePosition();
   }
 
@@ -24,5 +24,6 @@ class Movable extends OnGrid {
   }
 
   function startWandering() {
+    machine = new WanderStateMachine(gameObject);
   }
 }

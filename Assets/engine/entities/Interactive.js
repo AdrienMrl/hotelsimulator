@@ -3,7 +3,7 @@
 class Interactive extends OnGrid {
 
   public var entrance: Target;
-  public var entrance_relative_pos = Vector2(0, 0);
+  public var entranceRelativePos = Vector2(0, 0);
   public var available = true;
 
   function repos(pos: Vector2) {
@@ -15,9 +15,9 @@ class Interactive extends OnGrid {
 
   function setEntranceNode() {
 
-    var entrance_node: Node =
-      Grid.instance.getNodeAt(current_node.positionOnGrid + entrance_relative_pos);
-    entrance = Target(entrance_node);
+    var entranceNode: Node =
+      Grid.instance.getNodeAt(currentNode.positionOnGrid + entranceRelativePos);
+    entrance = Target(entranceNode);
   }
 
   function Start() {
@@ -36,11 +36,11 @@ class Interactive extends OnGrid {
 
     function tellMeTheWay(me: Movable): Node {
 
-      if (me.current_node == node) {
+      if (me.currentNode == node) {
         return null;
       }
 
-      return Dijkstra.getClosestNode(dijkstra_grid, me.current_node);
+      return Dijkstra.getClosestNode(dijkstra_grid, me.currentNode);
     }
   }
 }

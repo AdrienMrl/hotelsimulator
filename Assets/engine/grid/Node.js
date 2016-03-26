@@ -10,7 +10,7 @@ class Node {
   public var type: Type;
   public var positionOnGrid: Vector2;
 
-  static public var tile_size = 1;
+  static public var tileSize = 1;
 
   function Node(t: Type, pos: Vector2) {
       type = t;
@@ -18,7 +18,7 @@ class Node {
   }
 
   function getWorldPos() {
-    return Vector3(positionOnGrid.x * tile_size, 0, positionOnGrid.y * tile_size);
+    return Vector3(positionOnGrid.x * tileSize, 0, positionOnGrid.y * tileSize);
   }
 
   function isObstacle() {

@@ -13,27 +13,27 @@ public class GridDebugDisplay extends MonoBehaviour {
   function drawGrid() {
 
     for (node in Grid.instance.grid) {
-      var node_size = Node.tile_size;
+      var nodeSize = Node.tileSize;
 
-      var node_pos = node.getWorldPos();
+      var nodePos = node.getWorldPos();
 
-      var p1 = Vector3(node_pos.x, 0.1, node_pos.z);
-      var p2 = Vector3(node_pos.x, 0.1, node_pos.z + node_size);
-      var p3 = Vector3(node_pos.x + node_size, 0.1, node_pos.z);
+      var p1 = Vector3(nodePos.x, 0.1, nodePos.z);
+      var p2 = Vector3(nodePos.x, 0.1, nodePos.z + nodeSize);
+      var p3 = Vector3(nodePos.x + nodeSize, 0.1, nodePos.z);
 
       Debug.DrawLine(p1, p2, Color.blue, Time.deltaTime, true);
       Debug.DrawLine(p1, p3, Color.blue, Time.deltaTime, true);
 
-      var grid_size = Grid.instance.size;
+      var gridSize = Grid.instance.size;
 
-      if (node.positionOnGrid.x == grid_size.x - 1) {
-        var p4x = Vector3(node_pos.x + node_size, 0.1, node_pos.z + node_size);
+      if (node.positionOnGrid.x == gridSize.x - 1) {
+        var p4x = Vector3(nodePos.x + nodeSize, 0.1, nodePos.z + nodeSize);
 
         Debug.DrawLine(p3, p4x, Color.blue, Time.deltaTime, true);
       }
 
-      if (node.positionOnGrid.y == grid_size.y - 1) {
-        var p4y = Vector3(node_pos.x + node_size, 0.1, node_pos.z + node_size);
+      if (node.positionOnGrid.y == gridSize.y - 1) {
+        var p4y = Vector3(nodePos.x + nodeSize, 0.1, nodePos.z + nodeSize);
 
         Debug.DrawLine(p2, p4y, Color.blue, Time.deltaTime, true);
       }

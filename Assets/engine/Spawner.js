@@ -39,17 +39,20 @@ function spawnMouse() {
 
 static function spawn(what: String, where: Vector2): OnGrid {
 
-  var object = Instantiate(Resources.Load(what)) as GameObject;
-  var on_grid = object.GetComponent.<OnGrid>();
-  on_grid.setup(what);
-  on_grid.repos(where);
+  if (Grid.isNodeValid(where)) {
+    var object = Instantiate(Resources.Load(what)) as GameObject;
+    var on_grid = object.GetComponent.<OnGrid>();
+    on_grid.setup(what);
+    on_grid.repos(where);
 
-  return on_grid;
+    return on_grid;
+  }
+  return null;
 }
 
 static function spawnInteractive(what: String, where: Vector2): Interactive {
   var obj = spawn(what, where) as Interactive;
-  obj.entrance_relative_pos = (Meta.meta[what] as Meta).entrance;
+  obj.entranceRelativePos = (Meta.meta[what] as Meta).entrance;
   return obj;
 }
 
@@ -62,7 +65,7 @@ static function createRoom(name: String) {
 static function findRoom(type: System.Type): Room {
   for (room in rooms) {
     if (typeof(room) == Parking)
-      return room;
+    return room;
   }
   return null;
 }

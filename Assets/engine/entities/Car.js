@@ -7,12 +7,12 @@ class Car extends Movable {
     super.Start();
     speed = 4;
     movingAnimationName = null;
-    moveToParkingSpot();
+    startWandering();
   }
 
   function moveToParkingSpot() {
     var parking = Spawner.findRoom(Parking) as Parking;
-    var parking_spot = parking.getParkingSpot();
-    moveTowards(parking_spot);
+    var parkingSpot = parking.getParkingSpot();
+    moveTowards(parkingSpot);
   }
 }

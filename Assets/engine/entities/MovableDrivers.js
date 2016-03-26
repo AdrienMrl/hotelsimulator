@@ -2,9 +2,9 @@
 
 class MovableDriver {
 
-  var target_node: Node;
+  var targetNode: Node;
   var movable: Movable;
-  var pull_next_node: Function;
+  var pullNextNode: Function;
   var target: Interactive;
 
   private var gObject: GameObject;
@@ -16,43 +16,44 @@ class MovableDriver {
 
   function UpdatePosition() {
 
-    if (target_node != null) {
+    if (targetNode != null) {
 
       var step = movable.speed * Time.deltaTime;
       faceDirection();
       gObject.transform.position =
-      Vector3.MoveTowards(gObject.transform.position, target_node.getWorldPos(), step);
+      Vector3.MoveTowards(gObject.transform.position, targetNode.getWorldPos(), step);
 
-      if (Vector3.Distance(gObject.transform.position, target_node.getWorldPos()) <= step) {
-        movable.current_node = target_node;
-        target_node = get_next_node();
-        if (target_node == null)
-          stopedMoving();
+      if (Vector3.Distance(gObject.transform.position, targetNode.getWorldPos()) <= step) {
+        movable.currentNode = targetNode;
+        targetNode = getNextNode();
       }
+    } else {
+      stopedMoving();
     }
   }
 
-  function get_next_node(): Node {
-    if (this.pull_next_node == null)
+  function getNextNode(): Node {
+    if (this.pullNextNode == null)
       return null;
-    return this.pull_next_node() as Node;
+    return this.pullNextNode() as Node;
   }
 
-  function set_pull_node(f: Function) {
-    this.pull_next_node = f;
-    if (f == null)
+  function setPullNode(f: function(): Node) {
+    this.pullNextNode = f;
+    if (f == null) {
       stopedMoving();
-    else {
+    } else {
       startedMoving();
-      target_node = f();
+      targetNode = f();
     }
   }
 
   function faceDirection() {
-    var new_dir = Vector3.RotateTowards(gObject.transform.forward,
-      target_node.getWorldPos() - gObject.transform.position,
-      movable.speed * 3 * Time.deltaTime, 0);
-      gObject.transform.rotation = Quaternion.LookRotation(new_dir);
+    var newRotation = Quaternion.LookRotation(targetNode.getWorldPos() - gObject.transform.position);
+    newRotation.x = 0.0;
+    newRotation.z = 0.0;
+    gObject.transform.rotation = Quaternion.Slerp(gObject.transform.rotation, newRotation, Time.deltaTime * 5);
+
     }
 
     function stopedMoving() {
@@ -72,35 +73,21 @@ class MovableDriver {
       }
     }
 
-    function pull_next_node_towards_target() {
+    function pullNodeTowardsTarget() {
       return target.entrance.tellMeTheWay(movable);
     }
 
     function moveTowards(trgt: Interactive) {
       target = trgt;
-      set_pull_node(pull_next_node_towards_target);
-    }
-  }
-
-  class WanderAround extends MovableDriver {
-
-    var direction = Vector2.zero;
-    var forward_count = 0;
-
-    function WanderAround(gameObj: GameObject) {
-
-      super(gameObj);
+      setPullNode(pullNodeTowardsTarget);
     }
 
-
-    function pull_next_node() {
-
-      if (forward_count-- == 0) {
-
-        var r = Random.Range(0,8);
-        direction = Dijkstra.directions[r];
-        forward_count = Random.Range(1, 10);
-      }
-      return Grid.instance.getNodeAt(movable.current_node.positionOnGrid + direction);
+    function isStopped() {
+      return targetNode == null;
     }
-  }
+
+    function setNextNode(node: Node) {
+      targetNode = node;
+      startedMoving();
+    }
+}
