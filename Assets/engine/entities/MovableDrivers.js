@@ -80,6 +80,7 @@ class MovableDriver {
     function moveTowards(trgt: Interactive) {
       target = trgt;
       setPullNode(pullNodeTowardsTarget);
+      return target;
     }
 
     function isStopped() {
@@ -89,5 +90,9 @@ class MovableDriver {
     function setNextNode(node: Node) {
       targetNode = node;
       startedMoving();
+    }
+
+    function isOnTarget() {
+      return movable.currentNode == target.entrance.node;
     }
 }

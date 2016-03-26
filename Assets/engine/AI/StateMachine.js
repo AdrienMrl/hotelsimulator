@@ -38,14 +38,22 @@ class StateMachine {
   }
 }
 
-class WanderStateMachine extends StateMachine {
+class MovableStateMachine extends StateMachine {
 
   var movable: Movable;
 
-  function WanderStateMachine(gobj: GameObject) {
+  function MovableStateMachine(gobj: GameObject) {
     // I would gladly write this(gobj); but unity segfaults. Anyone knows why ?
     this.gobj = gobj;
     movable = gobj.GetComponent.<Movable>();
+  }
+
+}
+
+class WanderStateMachine extends MovableStateMachine {
+
+  function WanderStateMachine(gobj: GameObject) {
+    super(gobj);
   }
 
   function initialState() {

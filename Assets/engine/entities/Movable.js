@@ -20,7 +20,7 @@ class Movable extends OnGrid {
   /* --- API --- */
 
   function moveTowards(trgt: Interactive) {
-    driver.moveTowards(trgt);
+    return driver.moveTowards(trgt);
   }
 
   function startWandering() {
