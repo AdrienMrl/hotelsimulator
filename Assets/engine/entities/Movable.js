@@ -2,7 +2,7 @@
 
 class Movable extends OnGrid {
 
-  var speed = 1;
+  var speed = 1.0;
   public var movingAnimationName = "walking";
   public var idleAnimationName = "idle";
   public var driver: MovableDriver;

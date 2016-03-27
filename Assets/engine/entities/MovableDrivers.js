@@ -67,8 +67,8 @@ class MovableDriver {
       if (movable.movingAnimationName != null) {
         var animation = gObject.GetComponent.<Animation>();
         animation.Play(movable.movingAnimationName);
-        for (var state: AnimationState in animation) {
-          state.speed = 2;
+        for (state in animation) {
+          (state as AnimationState).speed = 2;
         }
       }
     }
@@ -77,7 +77,18 @@ class MovableDriver {
       return target.entrance.tellMeTheWay(movable);
     }
 
+    function moveTowardsInteractiveWithLine(trgt: InteractiveWithLine) {
+      trgt.line.enqueue(movable);
+      return null;
+    }
+
     function moveTowards(trgt: Interactive) {
+
+      var withLine = trgt.GetComponent.<InteractiveWithLine>();
+      if (withLine != null) {
+        return moveTowardsInteractiveWithLine(withLine);
+      }
+
       target = trgt;
       setPullNode(pullNodeTowardsTarget);
       return target;
@@ -93,6 +104,6 @@ class MovableDriver {
     }
 
     function isOnTarget() {
-      return movable.currentNode == target.entrance.node;
+      return target == null || movable.currentNode == target.entrance.node;
     }
 }

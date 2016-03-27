@@ -12,6 +12,8 @@ function Awake() {
   }
 
   Spawner.createRoom("Parking");
+  Spawner.spawn("desk", Vector2(15, 10));
+
 }
 
 function Update () {

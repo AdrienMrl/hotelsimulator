@@ -2,18 +2,21 @@
 
 static var rooms = List.<Room>();
 static var selected_prefab = 0;
+static var interactiveObjects = new Hashtable();
 
 // this script is added to the engine game object from Engine.js
 
 function Update() {
 
-  // TODO: generic
-  if (Input.GetKeyDown("r"))
-    selected_prefab = 0;
-  if (Input.GetKeyDown("t"))
-    selected_prefab = 1;
-  if (Input.GetKeyDown("y"))
-    selected_prefab = 2;
+  var i = 0;
+
+  for (c in "rtyuiop") {
+    if (Input.GetKeyDown(c.ToString())) {
+      selected_prefab = i;
+    }
+    i++;
+  }
+
   if (Input.GetMouseButtonDown(0))
     spawnMouse();
 }
@@ -37,29 +40,66 @@ function spawnMouse() {
 
 }
 
+static function registerObject(what: String, interactive: Interactive) {
+  if (!interactiveObjects.Contains(what)) {
+    interactiveObjects.Add(what, new List.<Interactive>());
+  }
+
+  var list = interactiveObjects[what] as List.<Interactive>;
+  list.Add(interactive);
+}
+
 static function spawn(what: String, where: Vector2): OnGrid {
 
   if (Grid.isNodeValid(where)) {
     var object = Instantiate(Resources.Load(what)) as GameObject;
-    var on_grid = object.GetComponent.<OnGrid>();
-    on_grid.setup(what);
-    on_grid.repos(where);
 
-    return on_grid;
+    var interactive = object.GetComponent.<Interactive>();
+    if (interactive != null) {
+      setupInteractiveSpawn(what, interactive);
+      registerObject(what, interactive);
+    }
+
+    var onGrid = object.GetComponent.<OnGrid>();
+    onGrid.setup(what);
+    onGrid.repos(where);
+
+    return onGrid;
   }
+
   return null;
 }
 
-static function spawnInteractive(what: String, where: Vector2): Interactive {
-  var obj = spawn(what, where) as Interactive;
+static function findObjectOnGrid(name: String) {
+
+  var objects = interactiveObjects[name] as List.<Interactive>;
+  if (objects == null) {
+    return null;
+  }
+
+  for (o in objects) {
+    if (o.available)
+      return o;
+  }
+
+  return null;
+}
+
+static function setupInteractiveSpawn(what: String, obj: Interactive) {
   obj.entranceRelativePos = (Meta.meta[what] as Meta).entrance;
-  return obj;
 }
 
 static function createRoom(name: String) {
   var room = Instantiate(Resources.Load("Room")) as GameObject;
   var room_component = room.AddComponent.<Parking>();
   rooms.Add(room_component);
+}
+
+static function spawnEmptyInteractive(at: Vector2, name: String): Interactive {
+  var base = new GameObject();
+  var interactive = base.AddComponent.<Interactive>();
+  interactive.setup(name);
+  return interactive;
 }
 
 static function findRoom(type: System.Type): Room {

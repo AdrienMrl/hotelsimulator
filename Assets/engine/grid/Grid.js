@@ -45,7 +45,9 @@ public class Grid {
   /*
   * --- READ/WRITE TO THE GRID API ---
   */
-  function getNodeAt(position: Vector2) : Node {
+
+  static function getNodeAt(position: Vector2) : Node {
+    var grid = instance.grid;
     return isNodeValid(position) ? grid[position.x, position.y] : null;
   }
 
@@ -66,6 +68,32 @@ public class Grid {
              position.y >= 0 &&
              position.x < Grid.instance.size.x &&
              position.y < Grid.instance.size.y;
+  }
+
+  static function isNodeObstacle(position: Vector2) {
+    if (!isNodeValid(position)) {
+      return true;
+    }
+
+    return Grid.getNodeAt(position).type == Node.Type.Obstacle;
+  }
+
+  // TODO: randomize this
+  static function obtainValidNeighbouringPos(at: Vector2): Vector2 {
+    var surroundings = [
+      Vector2(1, 0),
+      Vector2(0, 1),
+      Vector2(-1, 0),
+      Vector2(0, -1)
+    ];
+
+    for (d in surroundings) {
+      var node = at + d;
+      if (!isNodeObstacle(node)) {
+        return node;
+      }
+    }
+    return at;
   }
 
 }

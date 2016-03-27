@@ -1,5 +1,18 @@
 ﻿#pragma strict
 
+class InteractiveWithLine extends Interactive {
+  var line: Line;
+
+  function Start() {
+      super.Start();
+
+      var serviceEntrance = entrance.node.positionOnGrid + Vector2(0, 2);
+
+      line = new Line(entrance.node.positionOnGrid,
+        entrance.node.positionOnGrid - serviceEntrance);
+  }
+}
+
 class Interactive extends OnGrid {
 
   public var entrance: Target;

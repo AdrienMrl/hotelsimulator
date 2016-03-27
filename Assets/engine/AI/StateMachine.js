@@ -5,7 +5,7 @@ class StateMachine {
   var gobj: GameObject;
   var state = initialState;
   var elapsed = 0.0;
-  var refreshRate = 0;
+  var refreshRate = 0.0;
 
   function update() {
 

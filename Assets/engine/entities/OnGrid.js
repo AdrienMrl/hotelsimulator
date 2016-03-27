@@ -15,6 +15,10 @@ class OnGrid extends IglooObject {
     objName = name;
 
     meta = Meta.meta[name] as Meta;
+    if (meta == null) {
+      meta = Meta.defaultMeta;
+    }
+
   }
 
   function Update() {

@@ -3,18 +3,19 @@
 class DeskMeta extends Meta {
   function DeskMeta() {
     var geo = new int[4, 2];
-    geo[0,1] = 0; geo[1,1] = 0; geo[2,1] = 0; geo[3, 1] = 1;
-    geo[0,0] = 1; geo[1,0] = 1; geo[2,0] = 1; geo[3, 0] = 1;
+    geo[0,1] = 1; geo[1,1] = 1;
     super(true, geo, Vector2(1, -1));
   }
 }
 
 static var zero = Vector2(0, 0);
 
+static var defaultMeta = Meta(false, null, zero);
+
 static var meta = {
-  'guy': Meta(false, null, zero),
+  'guy': defaultMeta,
   'tree': Meta(true, null, zero),
-  'car': Meta(false, null, zero),
+  'car': defaultMeta,
   'desk': DeskMeta(),
   'parking-spot': Meta(false, null, Vector2(0, 1))
 };
