@@ -56,7 +56,7 @@ static function spawn(what: String, where: Vector2): OnGrid {
 
     var interactive = object.GetComponent.<Interactive>();
     if (interactive != null) {
-      setupInteractiveSpawn(what, interactive);
+      setupInteractiveSpawn(what, interactive, where);
       registerObject(what, interactive);
     }
 
@@ -85,8 +85,11 @@ static function findObjectOnGrid(name: String) {
   return null;
 }
 
-static function setupInteractiveSpawn(what: String, obj: Interactive) {
-  obj.entranceRelativePos = (Meta.meta[what] as Meta).entrance;
+static function setupInteractiveSpawn(what: String, obj: Interactive, where: Vector2) {
+  var meta = Meta.meta[what] as Meta;
+  obj.entranceRelativePos = meta.entrance;
+  obj.entrance.facing = meta.facing;
+  obj.repos(where, meta.facing);
 }
 
 static function createRoom(name: String) {
@@ -95,11 +98,13 @@ static function createRoom(name: String) {
   rooms.Add(room_component);
 }
 
-static function spawnEmptyInteractive(at: Vector2, name: String): Interactive {
+static function spawnEmptyInteractive(at: Vector2, facing: Vector2, name: String): Interactive {
   var base = new GameObject();
   var interactive = base.AddComponent.<Interactive>();
   interactive.setup(name);
-  return interactive;
+  interactive.repos(at, facing);
+
+  return interactive  ;
 }
 
 static function findRoom(type: System.Type): Room {

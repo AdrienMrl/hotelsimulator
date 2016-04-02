@@ -44,11 +44,12 @@ class CarBehaviour extends MovableStateMachine {
 
 class Car extends Movable {
 
-  var passengers = Random.Range(1, 5);
+  var passengers: int;
 
   function Start() {
 
     super.Start();
+    passengers = Random.Range(1, 5);
     speed = 4;
     movingAnimationName = null;
     machine = new CarBehaviour(gameObject);

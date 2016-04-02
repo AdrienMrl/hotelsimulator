@@ -63,6 +63,10 @@ public class Grid {
                    point.z * Node.tileSize + Node.tileSize / 2.0);
   }
 
+  static function gridPointToWorld(point: Vector2): Vector3 {
+    return Vector3(point.x, 0, point.y);
+  }
+
   static function isNodeValid(position: Vector2) {
       return position.x >= 0 &&
              position.y >= 0 &&

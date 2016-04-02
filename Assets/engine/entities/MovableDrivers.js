@@ -6,6 +6,7 @@ class MovableDriver {
   var movable: Movable;
   var pullNextNode: Function;
   var target: Interactive;
+  var directionToFace = Vector3.zero;
 
   private var gObject: GameObject;
 
@@ -19,17 +20,21 @@ class MovableDriver {
     if (targetNode != null) {
 
       var step = movable.speed * Time.deltaTime;
-      faceDirection();
+      directionToFace = targetNode.getWorldPos() - gObject.transform.position;
       gObject.transform.position =
       Vector3.MoveTowards(gObject.transform.position, targetNode.getWorldPos(), step);
 
       if (Vector3.Distance(gObject.transform.position, targetNode.getWorldPos()) <= step) {
         movable.currentNode = targetNode;
         targetNode = getNextNode();
+        if (targetNode == null && target != null) {
+          directionToFace = Grid.gridPointToWorld(target.entrance.facing);
+        }
       }
     } else {
       stopedMoving();
     }
+    faceDirection(directionToFace);
   }
 
   function getNextNode(): Node {
@@ -48,8 +53,11 @@ class MovableDriver {
     }
   }
 
-  function faceDirection() {
-    var newRotation = Quaternion.LookRotation(targetNode.getWorldPos() - gObject.transform.position);
+  function faceDirection(direction: Vector3) {
+    if (direction == Vector3.zero)
+      return;
+
+    var newRotation = Quaternion.LookRotation(direction);
     newRotation.x = 0.0;
     newRotation.z = 0.0;
     gObject.transform.rotation = Quaternion.Slerp(gObject.transform.rotation, newRotation, Time.deltaTime * 5);

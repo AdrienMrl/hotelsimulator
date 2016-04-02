@@ -54,54 +54,6 @@ class Dijkstra extends MonoBehaviour {
         return 14;
   }
 
-/*
-  static function computeDists(output_grid: DijkstraGrid, node: Node) {
-
-    if (node.isObstacle) {
-      output_grid.setValue(-1, node);
-      return;
-    }
-
-    var distance = output_grid.getValue(node.positionOnGrid);
-
-    if (distance == -1)
-      return;
-
-    for (d in directions) {
-
-      var point = node.positionOnGrid + d;
-
-      dist =  + getDistanceFromNeighbour(d);
-      if (minDist == -1 || dist < minDist) {
-        minDist = dist;
-        minNode = Grid.instance.getNodeAt(point);
-      }
-    }
-
-    if (minDist == -1)
-      return;
-
-    if (distance == -2 || distance > minDist)
-      output_grid.setValue(minDist, node);
-
-  }
-
-  static function makeMap(node: Node): DijkstraGrid {
-
-    var output_grid = DijkstraGrid();
-
-    if (node.isObstacle()) {
-      print("pathfinding should not be set to obstacle");
-      return output_grid;
-    }
-
-    output_grid.setValue(0, node.positionOnGrid);
-    computeDists(output_grid, node);
-    return output_grid;
-  }
-
-  */
-
   static function getClosestNode(map: DijkstraGrid, center: Node): Node {
 
     var position = center.positionOnGrid;

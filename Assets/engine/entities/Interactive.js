@@ -19,18 +19,18 @@ class Interactive extends OnGrid {
   public var entranceRelativePos = Vector2(0, 0);
   public var available = true;
 
-  function repos(pos: Vector2) {
+  function repos(pos: Vector2, facing: Vector2) {
 
     super.repos(pos);
+    setEntranceNode(facing);
 
-    setEntranceNode();
   }
 
-  function setEntranceNode() {
+  function setEntranceNode(facing: Vector2) {
 
     var entranceNode: Node =
       Grid.instance.getNodeAt(currentNode.positionOnGrid + entranceRelativePos);
-    entrance = Target(entranceNode);
+    entrance = new Target(entranceNode, facing);
   }
 
   function Start() {
@@ -40,7 +40,13 @@ class Interactive extends OnGrid {
   class Target {
 
     var node: Node;
+    var facing: Vector2;
     var dijkstra_grid: DijkstraGrid;
+
+    function Target(n: Node, facing: Vector2) {
+      this.facing = facing;
+      this(n);
+    }
 
     function Target(n: Node) {
       node = n;

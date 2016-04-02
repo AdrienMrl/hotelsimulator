@@ -17,8 +17,7 @@ class Line {
   }
 
   function createEndOfQueue(at: Vector2) {
-    endOfQueue = Spawner.spawnEmptyInteractive(origin, "endOfQueue");
-    endOfQueue.repos(at);
+    endOfQueue = Spawner.spawnEmptyInteractive(at, -direction, "endOfQueue");
   }
 
   function enqueue(obj: Movable) {
@@ -30,6 +29,7 @@ class Line {
 
     if (Grid.isNodeObstacle(nextQueuePos)) {
       nextQueuePos = Grid.obtainValidNeighbouringPos(endOfQueuePos);
+      direction = nextQueuePos - endOfQueuePos;
     }
 
     createEndOfQueue(nextQueuePos);
